@@ -135,7 +135,7 @@ export default {
 				},
 				{
 					icon: 'mdi-form-select',
-					title: 'Sales',
+					title: 'Invoiceas',
 					sublinks: [
 						{
 							icon: 'mdi-form-select',
