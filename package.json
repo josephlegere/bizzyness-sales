@@ -11,7 +11,13 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
     "core-js": "^3.9.1",
-    "nuxt": "^2.15.3"
+    "jspdf": "^2.3.1",
+    "jspdf-autotable": "^3.5.14",
+    "moment": "^2.29.1",
+    "nuxt": "^2.15.3",
+    "to-words": "^2.3.2",
+    "vuedraggable": "^2.24.3",
+    "vuelidate": "^0.7.6"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3"
