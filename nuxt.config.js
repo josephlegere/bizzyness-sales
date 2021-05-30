@@ -24,7 +24,18 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    "~/plugins/vue-moment.js",
+    '~/plugins/localStorage.js',
+    '~/plugins/Vuelidate',
+    { src: '~/plugins/vue-pdf.js', ssr: false }
   ],
+
+  /**
+   * Router settings
+   */
+  router: {
+    middleware: ['authenticated']
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -39,6 +50,26 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'cookie-universal-nuxt',
+    [
+      "@nuxtjs/firebase",
+      {
+        config: {
+          apiKey: process.env.NUXT_ENV_API_KEY,
+          authDomain: process.env.NUXT_ENV_AUTH_DOMAIN,
+          databaseURL: process.env.NUXT_ENV_DATABASE_URL,
+          projectId: process.env.NUXT_ENV_PROJECT_ID,
+          storageBucket: process.env.NUXT_ENV_STORAGE_BUCKET,
+          messagingSenderId: process.env.NUXT_ENV_MESSAGE_SENDER_ID,
+          appId: process.env.NUXT_ENV_APP_ID,
+          measurementId: process.env.NUXT_ENV_MEASUREMENT_ID
+        },
+        services: {
+          auth: true, // Just as example. Can be any other service.
+          firestore: true
+        }
+      }
+    ]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
