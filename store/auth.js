@@ -4,16 +4,20 @@ export const state = () => ({
 
 export const actions = {
 	async signUp({ commit }, { email, password }) {
-		await this.$fire.auth
-			.createUserWithEmailAndPassword(email, password)
-			.then(cred => {
-			return this.$fire.firestore
+		try {
+			let cred = await this.$fire.auth.createUserWithEmailAndPassword(email, password);
+				
+			await this.$fire.firestore
 				.collection("users")
 				.doc(cred.user.uid)
 				.set({
-				name: ""
+					name: ""
 				});
-			});
+		}
+		catch (err) {
+			console.error(err.message);
+			throw err;
+		}
 	},
 
 	async signInWithEmail({ commit }, access) {
@@ -59,9 +63,15 @@ export const actions = {
 	},
 
 	async signOut({ commit }) {
-		console.log("Log Out");
-		await this.$fire.auth.signOut();
-		commit("setUser", null);
+		try {
+			console.log("Log Out");
+			await this.$fire.auth.signOut();
+			commit("setUser", null);
+		}
+		catch (err) {
+			console.error(err.message);
+			throw err;
+		}
 	}
 };
 
