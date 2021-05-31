@@ -10,13 +10,16 @@ export const actions = {
     async get({ commit }, { tenant }) {
         let _transactions = [];
 		console.log(tenant);
+        console.log(moment().startOf('day').toDate());
+        console.log(moment().endOf('day').toDate());
 
         try {
             let transactionSnap = await this.$fire.firestore
                 .collection("transactions")
-                // .where("created_date", ">", new Date(dates[0]))
-                // .where("created_date", "<", new Date(dates[dates.length - 1]))
+                .where("date", ">=", moment().startOf('day').toDate())
+                .where("date", "<=", moment().endOf('day').toDate())
                 .where('tenantid', '==', tenant)
+
                 .get();
             
             transactionSnap.forEach(doc => {

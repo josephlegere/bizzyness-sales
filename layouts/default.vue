@@ -29,12 +29,12 @@
 						flat
 						v-else
 					>
-    					<v-expansion-panel>
+    					<v-expansion-panel class="expandable-nav">
 							<v-expansion-panel-header style="min-height: 48px;">
 								<!-- <v-icon>{{ item.icon }}</v-icon> -->
 								{{ item.title }}
 							</v-expansion-panel-header>
-							<v-expansion-panel-content class="expandable-nav">
+							<v-expansion-panel-content class="expandable-nav-content">
 								<v-list class="pa-0">
 									<v-list-item
 										v-for="(sublink, j) in item.sublinks"
@@ -161,7 +161,7 @@ export default {
 				},
 				{
 					icon: 'mdi-chart-bar',
-					title: 'Reports',
+					title: 'Sales Report',
 					to: '/reports'
 				}
 			],
@@ -186,7 +186,10 @@ export default {
 </script>
 
 <style>
-	.expandable-nav .v-expansion-panel-content__wrap {
+	.expandable-nav {
+		background-color:			transparent !important;
+	}
+	.expandable-nav-content .v-expansion-panel-content__wrap {
 		padding:					0px;
 	}
 
