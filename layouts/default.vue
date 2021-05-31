@@ -139,6 +139,11 @@ export default {
 					to: '/'
 				},
 				{
+					icon: 'mdi-bank-transfer',
+					title: 'Transactions',
+					to: '/transactions'
+				},
+				{
 					icon: 'mdi-form-select',
 					title: 'Invoices',
 					sublinks: [
@@ -158,11 +163,6 @@ export default {
 					icon: 'mdi-account-group',
 					title: 'Customers',
 					to: '/customers'
-				},
-				{
-					icon: 'mdi-bank-transfer',
-					title: 'Transactions',
-					to: '/transactions'
 				},
 				{
 					icon: 'mdi-chart-bar',

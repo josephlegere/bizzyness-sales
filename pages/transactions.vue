@@ -1,7 +1,7 @@
 <template>
     <v-row no-gutters="">
         <v-col>
-            <v-card>
+            <v-card class="mb-16">
                 <v-card-title>
                     <v-row no-gutters>
                         <v-col cols="12"  md="6" class="pa-2">
@@ -12,6 +12,9 @@
                                 single-line
                                 hide-details
                             ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6" class="d-flex justify-end pa-2 pt-5">   
+                            <div class="text-h5" v-text="`Total: ${total.toFixed(2)}`"></div>
                         </v-col>
                     </v-row>
                 </v-card-title>
@@ -624,6 +627,9 @@ export default {
         },
         entryNotes() {
             return this.formEntry.notes;
+        },
+        total() {
+            return this.transactions.reduce(function(a, c) { return a + Number((c.amount) || 0) }, 0);
         }
     },
     watch: {
