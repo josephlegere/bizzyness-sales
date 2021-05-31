@@ -17,9 +17,9 @@
 						router
 						exact
 					>
-						<!-- <v-list-item-action>
+						<v-list-item-action>
 							<v-icon>{{ item.icon }}</v-icon>
-						</v-list-item-action> -->
+						</v-list-item-action>
 						<v-list-item-content>
 							<v-list-item-title v-text="item.title" />
 						</v-list-item-content>
@@ -30,18 +30,23 @@
 						v-else
 					>
     					<v-expansion-panel class="expandable-nav">
-							<v-expansion-panel-header style="min-height: 48px;">
-								<!-- <v-icon>{{ item.icon }}</v-icon> -->
-								{{ item.title }}
+							<v-expansion-panel-header style="min-height: 48px; font-size: 16px; padding: 12px 16px;">
+								<div style="flex: none; margin-right: 32px;">
+									<v-icon>{{ item.icon }}</v-icon>
+								</div>
+								<div class="d-flex">
+									<span>{{ item.title }}</span>
+								</div>
 							</v-expansion-panel-header>
 							<v-expansion-panel-content class="expandable-nav-content">
-								<v-list class="pa-0">
+								<v-list style="padding: 0;">
 									<v-list-item
 										v-for="(sublink, j) in item.sublinks"
 										:key="j"
 										:to="sublink.to"
 										router
 										exact
+										style="padding-left: 74px"
 									>
 										<v-list-item-content>
 											<v-list-item-title v-text="sublink.title" />
