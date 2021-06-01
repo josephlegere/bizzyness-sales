@@ -505,7 +505,7 @@ export default {
             expand(false);
         },
         confirmAll (obj) {
-            this.$store.dispatch('transactions/edit', { transaction: obj.id, updates: this.editItemDefaults[obj.id] })
+            this.$store.dispatch('transactions/edit', { transaction: obj.id, updates: this.editItemDefaults[obj.id] || {} })
                 .then(() => {
                     console.log('Update Successful!');
                     this.editItemDefaults = Object.keys(this.editItemDefaults).reduce((accumulator, key) => {

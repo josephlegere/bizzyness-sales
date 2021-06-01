@@ -76,7 +76,8 @@ export const actions = {
 
                 _updates[key] = _value;
             });
-		    await this.$fire.firestore.collection('transactions').doc(transaction).update(_updates);
+            if (Object.keys(updates).length > 0)
+		        await this.$fire.firestore.collection('transactions').doc(transaction).update(_updates);
             commit('update', { id: transaction, updates: { editing: false }});
         }
         catch (err) {
