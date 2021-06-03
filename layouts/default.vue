@@ -139,9 +139,9 @@ export default {
 					to: '/'
 				},
 				{
-					icon: 'mdi-bank-transfer',
-					title: 'Transactions',
-					to: '/transactions'
+					icon: 'mdi-form-select',
+					title: 'Point of Sales',
+					to: '/sales'
 				},
 				{
 					icon: 'mdi-form-select',
@@ -158,6 +158,11 @@ export default {
 							to: '/invoices/create'
 						}
 					]
+				},
+				{
+					icon: 'mdi-bank-transfer',
+					title: 'Transactions',
+					to: '/transactions'
 				},
 				{
 					icon: 'mdi-account-group',
