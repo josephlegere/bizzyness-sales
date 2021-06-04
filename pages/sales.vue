@@ -21,25 +21,7 @@
         </v-row>
 
         <v-container class="mb-16">
-            <v-row
-                no-gutters
-                v-for="m in 4"
-                :key="m"
-                cols="12"
-            >
-                <v-col
-                    v-for="n in 3"
-                    :key="n"
-                    cols="12"
-                    sm="4"
-                >
-                    <v-card
-                        class="pa-2 ma-2"
-                    >
-                        <v-card-title>Hello</v-card-title>
-                    </v-card>
-                </v-col>
-            </v-row>
+            <Grid :records="products" /> <!-- Columns default 3 -->
         </v-container>
         
         <v-row
@@ -83,7 +65,7 @@
                                         <v-btn icon dark @click="cartModal = !cartModal">
                                             <v-icon>mdi-close</v-icon>
                                         </v-btn>
-                                        <v-toolbar-title>{{ editingTransaction ? 'Edit' : 'Add'}} an Account</v-toolbar-title>
+                                        <v-toolbar-title>Cart Details</v-toolbar-title>
                                     </v-toolbar>
 
                                     <v-card-text class="my-md-16">
@@ -134,12 +116,28 @@
 </template>
 
 <script>
+import Grid from '../components/Grid';
+
 export default {
     data () {
         return {
             search: '',
-            cartModal: false
+            products: [
+                {
+                    name: 'Water Bottle',
+                    price: '10',
+                    image: {
+                        url: ''
+                    },
+                    stock: 10
+                }
+            ],
+            cartModal: false,
+            validate: false
         }
+    },
+    components: {
+        Grid
     }
 }
 </script>
