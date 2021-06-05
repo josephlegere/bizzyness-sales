@@ -7,7 +7,11 @@
                 <v-list-item-title class="text-h5 mb-1">
                     {{ record.name }}
                 </v-list-item-title>
-                <v-list-item-subtitle>{{ record.price }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ record.calculatedPrice.unitPrice }}</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                    <div v-if="record.stock > 0" class="green--text darken-3"><b>In Stock</b></div>
+                    <div v-else class="red--text darken-4"><b>Out of Stock</b></div>
+                </v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-avatar
@@ -38,8 +42,9 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     color="#663b0e"
-                    dark
+                    :dark="record.stock > 0"
                     @click="addToCart"
+                    :disabled="record.stock <= 0"
                 >
                     Add
                     <v-icon right>mdi-cart</v-icon>
@@ -69,6 +74,7 @@ export default {
 
             if (this.validate) {
                 console.log(`Add ${this.quantity} ${this.record.name} To Cart`);
+                this.$emit('add-to-cart', this.record);
             }
         }
     }

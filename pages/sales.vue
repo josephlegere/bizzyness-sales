@@ -124,13 +124,27 @@ export default {
             search: '',
             products: [
                 {
+                    id: '1',
                     name: 'Water Bottle',
-                    price: '10',
-                    image: {
+                    calculatedPrice: {
+                        unitPrice: '10'
+                    },
+                    media: {
                         url: ''
                     },
                     stock: 10
-                }
+                },
+                {
+                    id: '1',
+                    name: 'Water Bottle',
+                    calculatedPrice: {
+                        unitPrice: '10'
+                    },
+                    media: {
+                        url: ''
+                    },
+                    stock: 0
+                },
             ],
             cartModal: false,
             validate: false

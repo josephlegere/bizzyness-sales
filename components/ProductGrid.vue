@@ -12,7 +12,7 @@
                 cols="12"
                 :sm="Math.floor(12/columns_init)"
             >
-                <ProductCard :record="record" />
+                <ProductCard :record="record" @add-to-cart="addToCart" />
             </v-col>
         </v-row>
     </div>
@@ -34,6 +34,12 @@ export default {
     data () {
         return {
             columns_default: 3
+        }
+    },
+    methods: {
+        addToCart(purchaseItem) {
+            console.log('Added To Cart');
+            console.log(purchaseItem);
         }
     },
     computed: {
