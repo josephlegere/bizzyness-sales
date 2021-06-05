@@ -21,7 +21,7 @@
         </v-row>
 
         <v-container class="mb-16">
-            <ProductGrid :records="products" /> <!-- Columns default 3 -->
+            <ProductGrid :records="products" @add-to-cart="addToCart" /> <!-- Columns default 3 -->
         </v-container>
         
         <v-row
@@ -40,7 +40,7 @@
                         height="60">
 
                         <v-toolbar-title class="mr-4">Total:</v-toolbar-title>
-                        <v-toolbar-title class="mr-4">60</v-toolbar-title>
+                        <v-toolbar-title class="mr-4">{{ total }}</v-toolbar-title>
 
                         <v-spacer></v-spacer>
 
@@ -136,9 +136,9 @@ export default {
                 },
                 {
                     id: '1',
-                    name: 'Water Bottle',
+                    name: 'Crushed Ice',
                     calculatedPrice: {
-                        unitPrice: '10'
+                        unitPrice: '15'
                     },
                     media: {
                         url: ''
@@ -146,8 +146,21 @@ export default {
                     stock: 0
                 },
             ],
+            orders: [],
             cartModal: false,
             validate: false
+        }
+    },
+    methods: {
+        addToCart(order) {
+            let _existing = this.orders.findIndex(_order => _order.id === order.id);
+            if (_existing >= 0) this.orders.splice(_existing, 1, order);
+            else this.orders.push(order);
+        }
+    },
+    computed: {
+        total() {
+            return this.orders.reduce((acc, curr) => acc + (curr.calculatedPrice.unitPrice * curr.quantity), 0);
         }
     },
     components: {

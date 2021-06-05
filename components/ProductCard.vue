@@ -32,7 +32,7 @@
                         dense
                         single-line
                         hide-details="auto"
-                        :rules="[v => v > 0 || 'Must be 1 or greater!']"
+                        :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= record.stock || 'Exceeded the sotck available!' ]"
                         style="width: 70px;"
                     ></v-text-field>
                     <div class="ml-1">
@@ -74,7 +74,7 @@ export default {
 
             if (this.validate) {
                 console.log(`Add ${this.quantity} ${this.record.name} To Cart`);
-                this.$emit('add-to-cart', this.record);
+                this.$emit('add-order', { ...this.record, quantity: this.quantity });
             }
         }
     }

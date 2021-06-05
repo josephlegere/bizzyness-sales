@@ -12,7 +12,7 @@
                 cols="12"
                 :sm="Math.floor(12/columns_init)"
             >
-                <ProductCard :record="record" @add-to-cart="addToCart" />
+                <ProductCard :record="record" @add-order="addOrder" />
             </v-col>
         </v-row>
     </div>
@@ -37,16 +37,15 @@ export default {
         }
     },
     methods: {
-        addToCart(purchaseItem) {
-            console.log('Added To Cart');
-            console.log(purchaseItem);
+        addOrder(order) {
+            this.$emit('add-to-cart', order);
         }
     },
     computed: {
         rows() {
             let _rows = [];
             let section = 0;
-            console.log(this.columns_init);
+            console.log(`Rows: ${this.columns_init}`);
             for (let i = 0; i < Math.ceil(this.records.length / this.columns_init); i++) {
                 _rows.push(this.records.slice(section, section + this.columns_init));
                 section += this.columns_init;
