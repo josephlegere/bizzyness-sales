@@ -12,57 +12,15 @@
                 cols="12"
                 :sm="Math.floor(12/columns_init)"
             >
-                <v-card
-                    class="pa-2 ma-2"
-                >
-                    <v-list-item three-line class="px-2">
-                        <v-list-item-content>
-                            <v-list-item-title class="text-h5 mb-1">
-                                {{ record.name }}
-                            </v-list-item-title>
-                            <v-list-item-subtitle>{{ record.price }}</v-list-item-subtitle>
-                        </v-list-item-content>
-
-                        <v-list-item-avatar
-                            tile
-                            size="80"
-                            color="grey"
-                            class="my-2"
-                        ></v-list-item-avatar>
-                    </v-list-item>
-                    <v-card-actions class="d-flex justify-end">
-                        <div class="d-flex flex-row align-center elevation-2 px-2 rounded">
-                            <v-text-field
-                                v-model="quantity"
-                                type="number"
-                                solo
-                                flat
-                                dense
-                                single-line
-                                hide-details
-                                :rules="[v => v > 0 || 'Must be 1 or greater!']"
-                                style="width: 70px;"
-                            ></v-text-field>
-                            <div class="ml-1">
-                                Qty.
-                            </div>
-                        </div>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            color="#663b0e"
-                            dark
-                        >
-                            Add
-                            <v-icon right>mdi-cart</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
+                <ProductCard :record="record" />
             </v-col>
         </v-row>
     </div>
 </template>
 
 <script>
+import ProductCard from '../components/ProductCard';
+
 export default {
     props: {
         records: {
@@ -75,8 +33,7 @@ export default {
     },
     data () {
         return {
-            columns_default: 3,
-            quantity: 1
+            columns_default: 3
         }
     },
     computed: {
@@ -96,6 +53,9 @@ export default {
     },
     created() {
         console.log(this.rows);
+    },
+    components: {
+        ProductCard
     }
 }
 </script>
