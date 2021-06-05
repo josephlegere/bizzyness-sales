@@ -21,7 +21,7 @@
         </v-row>
 
         <v-container class="mb-16">
-            <Grid :records="products" /> <!-- Columns default 3 -->
+            <ProductGrid :records="products" /> <!-- Columns default 3 -->
         </v-container>
         
         <v-row
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import Grid from '../components/Grid';
+import ProductGrid from '../components/ProductGrid';
 
 export default {
     data () {
@@ -137,7 +137,7 @@ export default {
         }
     },
     components: {
-        Grid
+        ProductGrid
     }
 }
 </script>
