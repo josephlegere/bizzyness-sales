@@ -60,53 +60,58 @@
                         </v-btn>
 
                         <v-bottom-sheet v-model="cartModal" scrollable transition="dialog-bottom-transition">
-                                <v-card class="rounded-t-xl">
-                                    <v-toolbar dark dense class="rounded-t-xl">
-                                        <v-btn icon dark @click="cartModal = !cartModal">
-                                            <v-icon>mdi-close</v-icon>
-                                        </v-btn>
-                                        <v-toolbar-title>Cart Details</v-toolbar-title>
-                                    </v-toolbar>
+                            <v-card class="rounded-t-xl">
+                                <v-toolbar dark dense class="rounded-t-xl">
+                                    <v-btn icon dark @click="cartModal = !cartModal">
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                    <v-toolbar-title>Cart Details</v-toolbar-title>
+                                </v-toolbar>
 
-                                    <v-card-text class="my-md-16">
-                                        <v-container>
-                                            <v-form ref="form" v-model="validate">
-                                                <v-row>
-                                                    <v-col
-                                                        cols="12"
-                                                        md="6"
-                                                        offset-md="3"
-                                                    >
-                                                        <v-text-field
-                                                            label="Account Name *"
-                                                            :rules="[v => !!v || 'Account Name is required']"
-                                                        ></v-text-field>
-                                                    </v-col>
-                                                    <v-col
-                                                        cols="12"
-                                                        md="6"
-                                                        offset-md="3"
-                                                        class="d-flex flex-row-reverse"
-                                                    >
-                                                        <v-btn
-                                                            dark
-                                                        >Submit</v-btn>
-                                                            <!-- :loading="submittingForm"
-                                                            :disabled="submittingForm" -->
-                                                    </v-col>
-                                                    <v-col
-                                                        cols="12"
-                                                        md="6"
-                                                        offset-md="3"
-                                                    >
-                                                        <small>* indicates required field</small>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-form>
-                                        </v-container>
-                                    </v-card-text>
-                                </v-card>
-                            </v-bottom-sheet>
+                                <v-card-text class="my-2 my-md-8">
+                                    <v-row>
+                                        <v-col
+                                            v-for="(order, i) in orders"
+                                            cols="12"
+                                            md="8"
+                                            offset-md="2"
+                                            :key="i"
+                                        >
+                                            <ProductOrder :order="order" />
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                                <v-card-actions class="elevation-2">
+                                    <v-form ref="form" v-model="validate" style="width: 100%;">
+                                        <v-col
+                                            cols="12"
+                                            md="8"
+                                            offset-md="2"
+                                            class="d-flex justify-space-between align-center"
+                                        >
+                                            <div class="text-h5" v-text="`Total: `"></div>
+                                            <v-text-field
+                                                v-model="total"
+                                                :rules="[v => parseInt(v) > 0 || 'Total is required']"
+                                                readonly
+                                                solo
+                                                flat
+                                                dense
+                                                hide-details="auto"
+                                                background-color="rgba(255,255,255, 0)"
+                                                style="width:120px; margin: auto 0; font-size: 1.5rem;"
+                                            ></v-text-field>
+                                            <v-btn
+                                                :dark="!submittingForm"
+                                                :loading="submittingForm"
+                                                :disabled="submittingForm"
+                                                @click="submitCart"
+                                            >Confirm</v-btn>
+                                        </v-col>
+                                    </v-form>
+                                </v-card-actions>
+                            </v-card>
+                        </v-bottom-sheet>
 
                     </v-toolbar>
                 </v-sheet>
@@ -117,6 +122,7 @@
 
 <script>
 import ProductGrid from '../components/ProductGrid';
+import ProductOrder from '../components/ProductOrder';
 
 export default {
     data () {
@@ -135,7 +141,7 @@ export default {
                     stock: 10
                 },
                 {
-                    id: '1',
+                    id: '2',
                     name: 'Crushed Ice',
                     calculatedPrice: {
                         unitPrice: '15'
@@ -143,12 +149,24 @@ export default {
                     media: {
                         url: ''
                     },
-                    stock: 0
+                    stock: 2
+                },
+                {
+                    id: '3',
+                    name: 'Tube Ice',
+                    calculatedPrice: {
+                        unitPrice: '20'
+                    },
+                    media: {
+                        url: ''
+                    },
+                    stock: 5
                 },
             ],
             orders: [],
             cartModal: false,
-            validate: false
+            validate: false,
+            submittingForm: false
         }
     },
     methods: {
@@ -156,6 +174,14 @@ export default {
             let _existing = this.orders.findIndex(_order => _order.id === order.id);
             if (_existing >= 0) this.orders.splice(_existing, 1, order);
             else this.orders.push(order);
+        },
+        submitCart() {
+            this.$refs.form.validate();
+
+            if (this.validate) {
+                console.log(this.orders);
+                this.submittingForm = true;
+            }
         }
     },
     computed: {
@@ -164,7 +190,8 @@ export default {
         }
     },
     components: {
-        ProductGrid
+        ProductGrid,
+        ProductOrder
     }
 }
 </script>

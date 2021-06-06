@@ -32,6 +32,7 @@
                         dense
                         single-line
                         hide-details="auto"
+                        :disabled="record.stock <= 0"
                         :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= record.stock || 'Exceeded the sotck available!' ]"
                         style="width: 70px;"
                     ></v-text-field>
