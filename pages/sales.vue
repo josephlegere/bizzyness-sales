@@ -121,6 +121,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ProductGrid from '../components/ProductGrid';
 import ProductOrder from '../components/ProductOrder';
 
@@ -128,41 +129,6 @@ export default {
     data () {
         return {
             search: '',
-            products: [
-                {
-                    id: '1',
-                    name: 'Water Bottle',
-                    calculatedPrice: {
-                        unitPrice: '10'
-                    },
-                    media: {
-                        url: ''
-                    },
-                    stock: 10
-                },
-                {
-                    id: '2',
-                    name: 'Crushed Ice',
-                    calculatedPrice: {
-                        unitPrice: '15'
-                    },
-                    media: {
-                        url: ''
-                    },
-                    stock: 2
-                },
-                {
-                    id: '3',
-                    name: 'Tube Ice',
-                    calculatedPrice: {
-                        unitPrice: '20'
-                    },
-                    media: {
-                        url: ''
-                    },
-                    stock: 5
-                },
-            ],
             orders: [],
             cartModal: false,
             validate: false,
@@ -185,9 +151,26 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            products: state => state.products.list,
+            loggeduser: state => state.auth.loggeduser
+        }),
+        tenant() {
+            return this.loggeduser.tenantid.split('/')[1];
+        },
         total() {
             return this.orders.reduce((acc, curr) => acc + (curr.calculatedPrice.unitPrice * curr.quantity), 0);
         }
+    },
+    watch: {
+        cartModal (val) {
+            !val && this.$refs.form.reset();
+        }
+    },
+    async created() {
+        // this.loading = true;
+        await this.$store.dispatch('products/get', this.tenant);
+        // this.loading = false;
     },
     components: {
         ProductGrid,

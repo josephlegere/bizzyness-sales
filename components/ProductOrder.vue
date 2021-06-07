@@ -34,7 +34,7 @@
                         single-line
                         hide-details="auto"
                         :disabled="order.stock <= 0"
-                        :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= order.stock || 'Exceeded the sotck available!' ]"
+                        :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= order.stock || 'Exceeded the stock available!' ]"
                         style="width: 70px;"
                     ></v-text-field>
                     <div class="ml-1">
