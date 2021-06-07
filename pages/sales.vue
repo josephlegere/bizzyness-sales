@@ -20,103 +20,119 @@
             </v-col>
         </v-row>
 
-        <v-container class="mb-16">
-            <ProductGrid :records="products" @add-to-cart="addToCart" /> <!-- Columns default 3 -->
-        </v-container>
-        
-        <v-row
-            class="toolbar-container"
-            no-gutters
-        >
-            <v-col
-                md="3"
-                class="ml-md-auto"
+        <div v-if="loading">
+            <v-row no-gutters>
+                <v-col
+                    v-for="i in 3"
+                    :key="i"
+                    cols="12"
+                    md="4"
+                >
+                    <v-skeleton-loader
+                        type="article, actions"
+                    ></v-skeleton-loader>
+                </v-col>
+            </v-row>
+        </div>
+        <div v-else>
+            <v-container class="mb-16">
+                <ProductGrid :records="products" @add-to-cart="addToCart" /> <!-- Columns default 3 -->
+            </v-container>
+            
+            <v-row
+                class="toolbar-container"
+                no-gutters
             >
-                <v-sheet
-                    color="transparent"
-                    class="form-toolbar">
-                    <v-toolbar
-                        dark
-                        height="60">
+                <v-col
+                    md="3"
+                    class="ml-md-auto"
+                >
+                    <v-sheet
+                        color="transparent"
+                        class="form-toolbar">
+                        <v-toolbar
+                            dark
+                            height="60">
 
-                        <v-toolbar-title class="mr-4">Total:</v-toolbar-title>
-                        <v-toolbar-title class="mr-4">{{ total }}</v-toolbar-title>
+                            <v-toolbar-title class="mr-4">Total:</v-toolbar-title>
+                            <v-toolbar-title class="mr-4">{{ total }}</v-toolbar-title>
 
-                        <v-spacer></v-spacer>
+                            <v-spacer></v-spacer>
 
-                        <v-btn
-                            outlined
-                            :small="$vuetify.breakpoint.smAndDown"
-                            @click="cartModal = true"
-                            class="ml-md-1"
-                        >
-                            Cart
-                            <v-icon
-                                right
-                                dark
+                            <v-btn
+                                outlined
+                                :small="$vuetify.breakpoint.smAndDown"
+                                @click="cartModal = true"
+                                class="ml-md-1"
                             >
-                                mdi-cart-outline
-                            </v-icon>
-                        </v-btn>
+                                Cart
+                                <v-icon
+                                    right
+                                    dark
+                                >
+                                    mdi-cart-outline
+                                </v-icon>
+                            </v-btn>
 
-                        <v-bottom-sheet v-model="cartModal" scrollable transition="dialog-bottom-transition">
-                            <v-card class="rounded-t-xl">
-                                <v-toolbar dark dense class="rounded-t-xl">
-                                    <v-btn icon dark @click="cartModal = !cartModal">
-                                        <v-icon>mdi-close</v-icon>
-                                    </v-btn>
-                                    <v-toolbar-title>Cart Details</v-toolbar-title>
-                                </v-toolbar>
+                            <v-bottom-sheet v-model="cartModal" scrollable transition="dialog-bottom-transition">
+                                <v-card class="rounded-t-xl">
+                                    <v-toolbar dark dense class="rounded-t-xl">
+                                        <v-btn icon dark @click="cartModal = !cartModal">
+                                            <v-icon>mdi-close</v-icon>
+                                        </v-btn>
+                                        <v-toolbar-title>Cart Details</v-toolbar-title>
+                                    </v-toolbar>
 
-                                <v-card-text class="my-2 my-md-8">
-                                    <v-row>
-                                        <v-col
-                                            v-for="(order, i) in orders"
-                                            cols="12"
-                                            md="8"
-                                            offset-md="2"
-                                            :key="i"
-                                        >
-                                            <ProductOrder :order="order" />
-                                        </v-col>
-                                    </v-row>
-                                </v-card-text>
-                                <v-card-actions class="elevation-2">
-                                    <v-form ref="form" v-model="validate" style="width: 100%;">
-                                        <v-col
-                                            cols="12"
-                                            md="8"
-                                            offset-md="2"
-                                            class="d-flex justify-space-between align-center"
-                                        >
-                                            <div class="text-h5" v-text="`Total: `"></div>
-                                            <v-text-field
-                                                v-model="total"
-                                                :rules="[v => parseInt(v) > 0 || 'Total is required']"
-                                                readonly
-                                                solo
-                                                flat
-                                                dense
-                                                hide-details="auto"
-                                                background-color="rgba(255,255,255, 0)"
-                                                style="width:120px; margin: auto 0; font-size: 1.5rem;"
-                                            ></v-text-field>
-                                            <v-btn
-                                                :dark="!submittingForm"
-                                                :loading="submittingForm"
-                                                :disabled="submittingForm"
-                                                @click="submitCart"
-                                            >Confirm</v-btn>
-                                        </v-col>
-                                    </v-form>
-                                </v-card-actions>
-                            </v-card>
-                        </v-bottom-sheet>
+                                    <v-card-text class="my-2 my-md-8">
+                                        <v-row>
+                                            <v-col
+                                                v-for="(order, i) in orders"
+                                                cols="12"
+                                                md="8"
+                                                offset-md="2"
+                                                :key="i"
+                                            >
+                                                <ProductOrder :order="order" />
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-text>
+                                    <v-card-actions class="elevation-2">
+                                        <v-form ref="form" v-model="validate" style="width: 100%;">
+                                            <v-col
+                                                cols="12"
+                                                md="8"
+                                                offset-md="2"
+                                                class="d-flex justify-space-between align-center"
+                                            >
+                                                <div class="text-h5" v-text="`Total: `"></div>
+                                                <v-text-field
+                                                    v-model="total"
+                                                    :rules="[v => parseInt(v) > 0 || 'Total is required']"
+                                                    readonly
+                                                    solo
+                                                    flat
+                                                    dense
+                                                    hide-details="auto"
+                                                    background-color="rgba(255,255,255, 0)"
+                                                    style="width:120px; margin: auto 0; font-size: 1.5rem;"
+                                                ></v-text-field>
+                                                <v-btn
+                                                    :dark="!submittingForm"
+                                                    :loading="submittingForm"
+                                                    :disabled="submittingForm"
+                                                    @click="submitCart"
+                                                >Confirm</v-btn>
+                                            </v-col>
+                                        </v-form>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-bottom-sheet>
 
-                    </v-toolbar>
-                </v-sheet>
-            </v-col>
-        </v-row>
+                        </v-toolbar>
+                    </v-sheet>
+                </v-col>
+            </v-row>
+        </div>
     </div>
 </template>
 
@@ -128,6 +144,7 @@ import ProductOrder from '../components/ProductOrder';
 export default {
     data () {
         return {
+            loading: false,
             search: '',
             orders: [],
             cartModal: false,
@@ -168,9 +185,9 @@ export default {
         }
     },
     async created() {
-        // this.loading = true;
+        this.loading = true;
         await this.$store.dispatch('products/get', this.tenant);
-        // this.loading = false;
+        this.loading = false;
     },
     components: {
         ProductGrid,
