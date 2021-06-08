@@ -7,11 +7,27 @@
                 <v-list-item-title class="text-h5 mb-1">
                     {{ record.name }}
                 </v-list-item-title>
-                <v-list-item-subtitle>{{ record.calculatedPrice.unitPrice }}</v-list-item-subtitle>
                 <v-list-item-subtitle>
                     <div v-if="record.stock > 0" class="green--text darken-3"><b>In Stock</b></div>
                     <div v-else class="red--text darken-4"><b>Out of Stock</b></div>
                 </v-list-item-subtitle>
+                <div>
+                    <div v-if="record.keywords && record.keywords.includes('$Flexible_Pricing')">
+                        <v-text-field
+                            v-model="pricing"
+                            type="number"
+                            solo
+                            flat
+                            dense
+                            single-line
+                            hide-details="auto"
+                            :disabled="record.stock <= 0"
+                            :rules="[v => v > 0 || 'Must be 1 or greater!']"
+                            style="width: 70px;"
+                        ></v-text-field>
+                    </div>
+                    <v-list-item-subtitle v-else class="text-h6">{{ pricing }}</v-list-item-subtitle>
+                </div>
             </v-list-item-content>
 
             <v-list-item-avatar
@@ -33,7 +49,7 @@
                         single-line
                         hide-details="auto"
                         :disabled="record.stock <= 0"
-                        :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= record.stock || 'Exceeded the sotck available!' ]"
+                        :rules="[v => v > 0 || 'Must be 1 or greater!', v => v <= record.stock || 'Exceeded the stock available!' ]"
                         style="width: 70px;"
                     ></v-text-field>
                     <div class="ml-1">
@@ -56,6 +72,8 @@
 </template>
 
 <script>
+import _ from 'lodash';
+
 export default {
     props: {
         record: {
@@ -66,7 +84,8 @@ export default {
     data() {
         return {
             quantity: 1,
-            validate: false
+            validate: false,
+            pricing: this.record.calculatedPrice.unitPrice
         }
     },
     methods: {
@@ -75,7 +94,9 @@ export default {
 
             if (this.validate) {
                 console.log(`Add ${this.quantity} ${this.record.name} To Cart`);
-                this.$emit('add-order', { ...this.record, quantity: this.quantity });
+                let { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock, keywords } = _.cloneDeep(this.record);
+                calculatedPrice.unitPrice = this.pricing;
+                this.$emit('add-order', { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock, keywords, quantity: this.quantity });
             }
         }
     }

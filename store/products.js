@@ -19,8 +19,8 @@ export const actions = {
         let { elements } = productsRes.data;
 
         _list = elements.map(product => {
-            let { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock } = product;
-            return { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock };
+            let { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock, keywords } = product;
+            return { id, _uniqueIdentifier, productNumber, name, calculatedPrice, media, stock, keywords };
         });
 
         commit('setList', _list);

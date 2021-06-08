@@ -21,18 +21,20 @@
         </v-row>
 
         <div v-if="loading">
-            <v-row no-gutters>
-                <v-col
-                    v-for="i in 3"
-                    :key="i"
-                    cols="12"
-                    md="4"
-                >
-                    <v-skeleton-loader
-                        type="article, actions"
-                    ></v-skeleton-loader>
-                </v-col>
-            </v-row>
+            <v-container class="mb-16">
+                <v-row no-gutters>
+                    <v-col
+                        v-for="i in 3"
+                        :key="i"
+                        cols="12"
+                        md="4"
+                    >
+                        <v-skeleton-loader
+                            type="article, actions"
+                        ></v-skeleton-loader>
+                    </v-col>
+                </v-row>
+            </v-container>
         </div>
         <div v-else>
             <v-container class="mb-16">
