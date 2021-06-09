@@ -94,7 +94,7 @@
                                                 offset-md="2"
                                                 :key="i"
                                             >
-                                                <ProductOrder :order="order" />
+                                                <ProductOrder :order="order" :ref="`porder`" />
                                             </v-col>
                                         </v-row>
                                     </v-card-text>
@@ -161,11 +161,24 @@ export default {
             else this.orders.push(order);
         },
         submitCart() {
-            this.$refs.form.validate();
+            try {
+                console.log(this.$refs.form);
+                console.log(this.$refs.porder);
 
-            if (this.validate) {
+                this.$refs.form.validate();
+                if (!this.validate) throw 'Form Not Validated!';
+
+                Object.values(this.$refs.porder).forEach((elem ,key) => {
+                    console.log(elem);
+                    elem.$refs.form.validate();
+                    if (!elem.validate) throw `Child Component ${key} Not Validated!`;
+                });
+
                 console.log(this.orders);
                 this.submittingForm = true;
+            }
+            catch (err) {
+                console.log(err);
             }
         }
     },
