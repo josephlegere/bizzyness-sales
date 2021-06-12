@@ -367,6 +367,7 @@ export default {
             }, 0);
         },
         extractData(list, len = 0) { // extracts data from the displayed data and turn to storable data
+            // pattern: level - root - index
             let _items = {};
             let _layout = [];
 
@@ -376,7 +377,7 @@ export default {
                 let _push = {};
 
                 if (elem.items.length > 0) {
-                    let _child = this.extractData(elem.items, len+1);
+                    let _child = this.extractData(elem.items, `${(len+1)}_${key}`);
                     _children = _child.layout;
                     _items = _.merge(_items, _child.items);
                 }
@@ -386,13 +387,13 @@ export default {
                     if (!(_items.hasOwnProperty(elem.rowtype)))
                         _items[elem.rowtype] = {};
 
-                    _items.entry[`${key}${len}`] = {
+                    _items.entry[`${len}_${key}`] = {
                         currency: this.currency,
                         name: elem.description,
                         price: elem.price,
                         quantity: elem.quantity
                     }
-                    _source.origin = `items/${elem.rowtype}/${key}${len}`;
+                    _source.origin = `items/${elem.rowtype}/${len}_${key}`;
                 }
                 else if (elem.rowtype === 'newline') {
                     _source.size = elem.size;
