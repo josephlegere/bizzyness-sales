@@ -160,7 +160,7 @@ export default {
             if (_existing >= 0) this.orders.splice(_existing, 1, order);
             else this.orders.push(order);
         },
-        submitCart() {
+        async submitCart() {
             try {
                 console.log(this.$refs.form);
                 console.log(this.$refs.porder);
@@ -176,16 +176,58 @@ export default {
 
                 console.log(this.orders);
                 this.submittingForm = true;
+                
+                await this.$store.dispatch('invoices/next', this.tenant);
+
+                let { account, id, name, tenantid } = this.loggeduser;
+                let { items, layout } = this.convertOrders(this.orders);
+
+                let _invoice = {
+                    active: true,
+                    agent: { account, id, name },
+                    customer: {
+                        account: 'Walk In',
+                        account_type: 'generated'
+                    },
+                    date: this.$fireModule.firestore.Timestamp.fromDate(new Date()), //this format is set date from server side
+                    dateDue: this.$fireModule.firestore.Timestamp.fromDate(new Date()), //this format is set date from server
+                    invoice_code: this.invoice_number,
+                    items,
+                    layout,
+                    remarks: '',
+                    created: this.$fireModule.firestore.FieldValue.serverTimestamp(),
+                    tenant: tenantid,
+                    total: this.total
+                }
+
+                console.log(_invoice);
             }
             catch (err) {
                 console.log(err);
             }
+        },
+        convertOrders(orders) {
+            let _items = {};
+            let _layout = [];
+
+            orders.forEach((elem, key) => {
+                let { id, _uniqueIdentifier, productNumber, name, calculatedPrice, quantity, media } = elem;
+                _items[`0_${key}`] = { id, _uniqueIdentifier, productNumber, name, currency: 'QR', price: calculatedPrice.unitPrice, quantity, media };
+                _layout.push({
+                    children: [],
+                    key: (key + 1),
+                    source: { origin: `items/entry/0_${key}` }
+                });
+            });
+
+            return { items: _items, layout: _layout };
         }
     },
     computed: {
         ...mapState({
             products: state => state.products.list,
-            loggeduser: state => state.auth.loggeduser
+            loggeduser: state => state.auth.loggeduser,
+            invoice_number: state => state.invoices.current
         }),
         tenant() {
             return this.loggeduser.tenantid.split('/')[1];
