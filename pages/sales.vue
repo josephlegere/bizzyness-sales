@@ -161,79 +161,54 @@ export default {
             else this.orders.push(order);
         },
         async submitCart() {
-            try {
-                console.log(this.$refs.form);
-                console.log(this.$refs.porder);
+            console.log(this.$refs.form);
+            console.log(this.$refs.porder);
 
-                this.$refs.form.validate();
-                if (!this.validate) throw 'Form Not Validated!';
+            this.$refs.form.validate();
+            if (!this.validate) throw 'Form Not Validated!';
 
-                Object.values(this.$refs.porder).forEach((elem ,key) => {
-                    console.log(elem);
-                    elem.$refs.form.validate();
-                    if (!elem.validate) throw `Child Component ${key} Not Validated!`;
-                });
-
-                console.log(this.orders);
-                this.submittingForm = true;
-                
-                await this.$store.dispatch('invoices/next', this.tenant);
-
-                let { account, id, name, tenantid } = this.loggeduser;
-                let { items, layout } = this.convertOrders(this.orders);
-
-                let _invoice = {
-                    active: true,
-                    agent: { account, id, name },
-                    customer: {
-                        account: 'Walk In',
-                        account_type: 'generated'
-                    },
-                    date: this.$fireModule.firestore.Timestamp.fromDate(new Date()), //this format is set date from server side
-                    dateDue: this.$fireModule.firestore.Timestamp.fromDate(new Date()), //this format is set date from server
-                    invoice_code: this.invoice_number,
-                    items,
-                    layout,
-                    remarks: '',
-                    created: this.$fireModule.firestore.FieldValue.serverTimestamp(),
-                    tenant: tenantid,
-                    total: this.total
-                }
-
-                console.log(_invoice);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
-        convertOrders(orders) {
-            let _items = {};
-            let _layout = [];
-
-            orders.forEach((elem, key) => {
-                let { id, _uniqueIdentifier, productNumber, name, calculatedPrice, quantity, media } = elem;
-                _items[`0_${key}`] = { id, _uniqueIdentifier, productNumber, name, currency: 'QR', price: calculatedPrice.unitPrice, quantity, media };
-                _layout.push({
-                    children: [],
-                    key: (key + 1),
-                    source: { origin: `items/entry/0_${key}` }
-                });
+            Object.values(this.$refs.porder).forEach((elem ,key) => {
+                console.log(elem);
+                elem.$refs.form.validate();
+                if (!elem.validate) throw `Child Component ${key} Not Validated!`;
             });
 
-            return { items: _items, layout: _layout };
+            console.log(this.orders);
+            this.submittingForm = true;
+            
+            await this.$store.dispatch('invoices/next', this.tenant);
+            
+            await this.$store.dispatch('products/add', { user: this.loggeduser, orders: this.orders, total: this.total, invoice_code: this.invoice_number, account: this.getCashOnHand, category: this.getSales });
+        },
+        object_filter (obj, predicate) {
+            return Object.entries(obj)
+                .filter( value => predicate(value[1]) )
         }
     },
     computed: {
         ...mapState({
             products: state => state.products.list,
             loggeduser: state => state.auth.loggeduser,
-            invoice_number: state => state.invoices.current
+            invoice_number: state => state.invoices.current,
+            accounts: state => state.accounts.list
         }),
         tenant() {
             return this.loggeduser.tenantid.split('/')[1];
         },
         total() {
             return this.orders.reduce((acc, curr) => acc + (curr.calculatedPrice.unitPrice * curr.quantity), 0);
+        },
+        getCashOnHand() {
+            console.log(Object.keys(this.accounts).length);
+            let _account = this.object_filter(this.accounts, value => value.name.toLowerCase().replace(/\s+/g, '') === 'cashonhand')[0];
+            console.log(_account);
+            let { currency, name } = _account[1];
+            return { id: `tenant_accounts/${this.tenant}/accounts/${_account[0]}`, name, currency };
+        },
+        getSales() {
+            let _account = this.object_filter(this.accounts, value => value.name.toLowerCase().replace(/\s+/g, '') === 'sales')[0];
+            let { account_type } = _account[1];
+            return { id: `invoices/${this.tenant}/payments/${_account[0]}`, name: 'Sales Invoice', account_type };
         }
     },
     watch: {
@@ -244,6 +219,7 @@ export default {
     async created() {
         this.loading = true;
         await this.$store.dispatch('products/get', this.tenant);
+        await this.$store.dispatch('accounts/get', this.tenant);
         this.loading = false;
     },
     components: {
