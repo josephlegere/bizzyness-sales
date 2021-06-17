@@ -2,6 +2,19 @@
     <v-card
         class="pa-2 ma-2"
     >
+        <v-btn
+            fab
+            dark
+            x-small
+            absolute
+            color="#663b0e"
+            style="top: -10px; right: -10px"
+            @click="removeOrder(order)"
+        >
+            <v-icon dark>
+                mdi-close
+            </v-icon>
+        </v-btn>
         <v-list-item three-line class="px-2">
             <v-list-item-avatar
                 tile
@@ -67,8 +80,8 @@ export default {
                 // console.log(`Add ${this.quantity} ${this.order.name} To Cart`);
             }
         },
-        removeOrder() {
-
+        removeOrder(order) {
+            this.$emit('remove-order', order);
         }
     }
 }

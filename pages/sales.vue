@@ -86,7 +86,7 @@
                                     </v-toolbar>
 
                                     <v-card-text class="my-2 my-md-8">
-                                        <v-row>
+                                        <v-row class="mt-1">
                                             <v-col
                                                 v-for="(order, i) in orders"
                                                 cols="12"
@@ -94,7 +94,7 @@
                                                 offset-md="2"
                                                 :key="i"
                                             >
-                                                <ProductOrder :order="order" :ref="`porder`" />
+                                                <ProductOrder :order="order" :ref="`porder`" @remove-order="removeFromCart" />
                                             </v-col>
                                         </v-row>
                                     </v-card-text>
@@ -139,6 +139,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapState } from 'vuex';
 import ProductGrid from '../components/ProductGrid';
 import ProductOrder from '../components/ProductOrder';
@@ -159,6 +160,11 @@ export default {
             let _existing = this.orders.findIndex(_order => _order.id === order.id);
             if (_existing >= 0) this.orders.splice(_existing, 1, order);
             else this.orders.push(order);
+        },
+        removeFromCart(order) {
+            console.log(this.orders);
+            console.log(order);
+            this.orders = _.difference(this.orders, [order])
         },
         async submitCart() {
             console.log(this.$refs.form);
