@@ -123,7 +123,7 @@
                                                     :loading="submittingForm"
                                                     :disabled="submittingForm"
                                                     @click="submitCart"
-                                                >Confirm</v-btn>
+                                                >Checkout</v-btn>
                                             </v-col>
                                         </v-form>
                                     </v-card-actions>
@@ -132,6 +132,40 @@
 
                         </v-toolbar>
                     </v-sheet>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col>
+                    <v-alert
+                        v-model="alertSuccess"
+                        border="bottom"
+                        elevation="2"
+                        close-text="Close Alert"
+                        color="rgba(102, 59, 14, 0.95)"
+                        dark
+                        dismissible
+                        transition="scroll-y-transition"
+                        class="mt-2 alert-box"
+                        type="success"
+                    >
+                        {{ prompts }}
+                    </v-alert>
+
+                    <v-alert
+                        v-model="alertError"
+                        border="bottom"
+                        elevation="2"
+                        close-text="Close Alert"
+                        color="rgba(102, 59, 14, 0.95)"
+                        dark
+                        dismissible
+                        transition="scroll-y-transition"
+                        class="mt-2 alert-box"
+                        type="error"
+                    >
+                        {{ prompts }}
+                    </v-alert>
                 </v-col>
             </v-row>
         </div>
@@ -152,7 +186,10 @@ export default {
             orders: [],
             cartModal: false,
             validate: false,
-            submittingForm: false
+            submittingForm: false,
+            alertSuccess: false,
+            alertError: false,
+            prompts: 'Prompt!'
         }
     },
     methods: {
@@ -184,7 +221,26 @@ export default {
             
             await this.$store.dispatch('invoices/next', this.tenant);
             
-            await this.$store.dispatch('products/add', { user: this.loggeduser, orders: this.orders, total: this.total, invoice_code: this.invoice_number, account: this.getCashOnHand, category: this.getSales });
+            this.$store.dispatch('products/add', { user: this.loggeduser, orders: this.orders, total: this.total, invoice_code: this.invoice_number, account: this.getCashOnHand, category: this.getSales })
+            .then(res => {
+                this.cartModal = false;
+                this.prompts = 'Successfully Added a Sales!'
+                this.alertSuccess = true;
+                setTimeout(() => {
+                    this.alertSuccess = false;
+                }, 5000);
+            })
+            .catch(err => {
+                this.prompts = err;
+                this.alertError = true;
+                setTimeout(() => {
+                    this.alertError = false;
+                }, 10000);
+            })
+            .finally(() => {
+                this.validate = false;
+                this.submittingForm = false;
+            });
         },
         object_filter (obj, predicate) {
             return Object.entries(obj)
@@ -235,7 +291,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .toolbar-container {
         width:                  100%;
         position:               fixed;
@@ -254,5 +310,11 @@ export default {
         /* v-sheet need to contain the toolbar in order for the border radius to take effect */
         box-shadow:             0px -2px 4px -1px rgb(0 0 0 / 20%), 0px -2px 5px 0px rgb(0 0 0 / 14%);
         border-radius:          15px 15px 0 0;
+    }
+    .alert-box {
+        position:               fixed;
+        top:                    0;
+        z-index:                5;
+        width:                  100%;
     }
 </style>
